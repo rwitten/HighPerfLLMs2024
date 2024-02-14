@@ -23,9 +23,9 @@ Link to the Discord: [https://discord.gg/e5pYxM3D](https://discord.gg/e5pYxM3D)
 
 # Session Timing, Slides, Videos and Take-Home Exercises
 
-| Session    |              Time                | Link to join                                                 | Slides                           | Take-Home Exercises          |
+| Session    |              Time                | Link to join (or recording)                                  | Slides                           | Take-Home Exercises          |
 | --------   | -------                          |  ----                                                        |         -----                    |        -----                 |
-| 1          | 3:30PM US Pacific, 2/21/2024     | [meet.google.com/tdd-brrt-gtp](meet.google.com/tdd-brrt-gtp) | To come                          |  To come                     |
+| 1          | 3:30PM US Pacific, 2/21/2024     | [Google Meet link](meet.google.com/tdd-brrt-gtp)             | To come                          |  To come                     |
 | 2          | 3:30PM US Pacific, 2/28/2024     |                                                              |                                  |                              |
 
 About me:
