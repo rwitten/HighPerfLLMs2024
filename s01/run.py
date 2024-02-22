@@ -30,9 +30,6 @@ LEARNING_RATE = 1e-3
 ###### START MODEL ######
 
 class OurModel(nn.Module):
-  def layer_impl(self, x):
-     return x
-
   @nn.compact
   def __call__(self, input_tokens):
     '''

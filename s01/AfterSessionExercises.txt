@@ -1,0 +1,7 @@
+Some after class ideas:
+
+(1) Reimplement the model on your own! What does each thing do? What goes wrong if you make a mistake, for example, you swap the size of the feedforward and embed dimensions?
+
+(2) The NN we implemented has a very unusual (and undesireable) property: what happens if you run the same inputs in a different order through it? So for example instead passing in a sequence with IDs [187, 134, 12], see how the the variable `proposed_outputs = model.apply(params, inputs)` changes if you pass in say [134, 12, 187]. 
+
+You should see that the proposed outputs only depend on the the preceding token! So the first output of [187,132,12] matches the third outupt of [134, 12, 1872]. That means NN is guessing based on a memory of a single token -- and therefore can't ever get too intelligent! We will discuss how to fix this when we cover Attention!
