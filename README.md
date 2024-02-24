@@ -25,7 +25,7 @@ Link to the Discord: [https://discord.gg/2AWcVatVAw](https://discord.gg/2AWcVatV
 
 | Session    |              Time                | Link to join (or recording)                                     | Slides                           | Take-Home Exercises                      |
 | --------   | -------                          |  ----                                                           |         -----                    |        -----                             |
-| 1          | 3:30PM US Pacific, 2/21/2024     | [Youtube recording](https://www.youtube.com/watch?v=jnJkGLk3-kM)| [slides](s01/Session1Slides.pdf) |  [link](s01/AfterSessionExercises.txt)   |
+| 1          | 3:30PM US Pacific, 2/21/2024     | [Youtube recording](https://www.youtube.com/watch?v=W0Cix2KNyXc)| [slides](s01/Session1Slides.pdf) |  [link](s01/AfterSessionExercises.txt)   |
 | 2          | 3:30PM US Pacific, 2/28/2024     | [Google Meet link](https://meet.google.com/tdd-brrt-gtp)        |                                  |                                          |
 
 About me:
