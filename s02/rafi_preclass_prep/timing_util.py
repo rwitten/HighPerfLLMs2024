@@ -23,5 +23,5 @@ def simple_timeit(f, *args, tries = 10, task = None):
     jax.profiler.stop_trace()
 
     average_time_ms = sum(outcomes_ms)/len(outcomes_ms)
-    #print(f"{task}: average time milliseconds: {average_time_ms:.2f}, trace {trace_dir}")
+    print(f"{task}: average time milliseconds: {average_time_ms:.2f}, trace {trace_dir}")
     return average_time_ms

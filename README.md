@@ -26,7 +26,8 @@ Link to the Discord: [https://discord.gg/2AWcVatVAw](https://discord.gg/2AWcVatV
 | Session    |              Time                | Link to join (or recording)                                     | Slides                           | Take-Home Exercises                      |
 | --------   | -------                          |  ----                                                           |         -----                    |        -----                             |
 | 1          | 3:30PM US Pacific, 2/21/2024     | [Youtube recording](https://www.youtube.com/watch?v=W0Cix2KNyXc)| [slides](s01/Session1Slides.pdf) |  [link](s01/AfterSessionExercises.txt)   |
-| 2          | 3:30PM US Pacific, 2/28/2024     | [Google Meet link](https://meet.google.com/tdd-brrt-gtp)        |                                  |                                          |
+| 2          | 3:30PM US Pacific, 2/28/2024     | [Youtube recording](https://www.youtube.com/watch?v=RciT5fcuN1E)| [slides](s02/Session2Slides.pdf) |  [link](s02/AfterSessionExercises.txt)   |
+| 2          | 3:30PM US Pacific, 3/13/2024     | [Google Meet link](https://meet.google.com/tdd-brrt-gtp)        |                                  |                                          |
 
 About me:
 I’m Rafi Witten, a tech lead on Cloud TPU/GPU Multipod. We develop MaxText and aim to push the frontier on Perf/TCO. In 2023, we executed the ["Largest ML Job"](https://cloud.google.com/blog/products/compute/the-worlds-largest-distributed-llm-training-job-on-tpu-v5e?e=13802955#:~:text=We%20demonstrated%20the%20benefits%20of,JAX%20ML%20framework%2C%20utilizing%20both) ever demonstrated in public and pioneered [“Accurate Quantized Training”](https://cloud.google.com/blog/products/compute/accurate-quantized-training-aqt-for-tpu-v5e?e=13802955), a technique for training with 8-bit integers.
