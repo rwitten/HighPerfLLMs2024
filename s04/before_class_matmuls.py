@@ -12,7 +12,11 @@ FSDP = 1
 TENSOR = 4
 LAYERS = 4
 
-mesh = jax.sharding.Mesh(np.reshape(  jax.devices(), (FSDP,TENSOR)), ["fsdp", "tensor"])
+d = jax.devices()
+outd = [[d[0], d[1], d[3], d[2]]]
+#outd = [d]
+
+mesh = jax.sharding.Mesh(np.reshape(  outd, (FSDP,TENSOR)), ["fsdp", "tensor"])
 activation_sharding = jax.sharding.NamedSharding(mesh, jax.sharding.PartitionSpec("fsdp", "tensor"))
 weight_sharding = jax.sharding.NamedSharding(mesh, jax.sharding.PartitionSpec("tensor", "fsdp"))
 
@@ -25,10 +29,11 @@ def activations():
 def weight():
     return jax.numpy.ones( (E, E), dtype = jax.numpy.bfloat16)
 
-@partial(jax.jit)
+@partial(jax.jit, out_shardings = activation_sharding)
 def f(_A, _weights):
     for i in range(LAYERS):
-        _A *= _A @ _weights[i]
+        with jax.named_scope(f"layers_{i}"):
+            _A = jax.lax.with_sharding_constraint(_A @ _weights[i], activation_sharding)
     return _A
 
 A = activations()
