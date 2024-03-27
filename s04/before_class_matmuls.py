@@ -8,13 +8,13 @@ BATCH_PER_DEVICE = 1024
 GLOBAL_BATCH = BATCH_PER_DEVICE * jax.device_count()
 E = 32768
 DATA = 1
-FSDP = 1
-TENSOR = 4
+FSDP = 16
+TENSOR = 16
 LAYERS = 4
 
 d = jax.devices()
-outd = [[d[0], d[1], d[3], d[2]]]
-#outd = [d]
+#outd = [[d[0], d[1], d[3], d[2]]]
+outd = [d]
 
 mesh = jax.sharding.Mesh(np.reshape(  outd, (FSDP,TENSOR)), ["fsdp", "tensor"])
 activation_sharding = jax.sharding.NamedSharding(mesh, jax.sharding.PartitionSpec("fsdp", "tensor"))
