@@ -1,0 +1,2 @@
+(1) Experiment with what happens if you remove the positional embedding. You should see that without a positional embedding the order of the inputs won't matter. So the prediction for [x,y] should be the same as the prediction for [y,x]
+(2) How much of a performance impact does jax.jit have for a full transformer? (Remember to set the overlapping flags we saw in session 4?)
