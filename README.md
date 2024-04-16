@@ -31,7 +31,8 @@ Link to the Discord: [https://discord.gg/2AWcVatVAw](https://discord.gg/2AWcVatV
 | 4          | 3:30PM US Pacific, 3/20/2024     | [Youtube recording](https://youtu.be/V5SPOR4Wilk)               | [slides](s04/Session4Slides.pdf) |  [link](s04/AfterSessionExercises.txt)   |  multi chip perf and rooflines, 1    |
 | 5          | 3:30PM US Pacific, 3/27/2024     | [Youtube recording](https://youtu.be/h2khnnFqJMA)               | [slides](s05/Session5Slides.pdf) |  [link](s05/AfterSessionExercises.txt)   |  attention                           |
 | 6          | 3:30PM US Pacific, 4/10/2024     | [Youtube recording](https://youtu.be/3dQBwysPgTk)               | [slides](s06/Session6Slides.pdf) |  [link](s06/AfterSessionExercises.txt)   |  optimized training                  |
-| 7          | 3:30PM US Pacific, 4/17/2024     | [Google Meet link](https://meet.google.com/tdd-brrt-gtp)        |                                  |                                          |
+| postponed  | 3:30PM US Pacific, 4/17/2024     | postponed                                                       |                                  |                                          |
+| 7          | 3:30PM US Pacific, 4/24/2024     | [Google Meet link](https://meet.google.com/tdd-brrt-gtp)        |                                  |                                          |
 
 
 About me:
