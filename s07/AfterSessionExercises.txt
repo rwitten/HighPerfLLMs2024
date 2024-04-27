@@ -1,0 +1,28 @@
+TPU v4 specs:
+* 275 * 10^12 FLOP/second
+* 32GB HBM
+* 1.23 TB/s HBM bandwidth
+
+1. Consider an end to end inference setup. Imagine a prefill context length of 1 million tokens, a 70 billion param model and assume flops = 2 * BATCH_IN_TOKENS * PARAMETERS. (With a 1M context, attention flops might be important, but please ignore them for now.)
+
+Product wants to get the first token to the customer within 10 seconds. What does the roofline suggest is the minimum number of TPU v4 chips we need?
+
+(Recall we need to do prefill before generate.)
+
+2. Consider an end to end inference setup with a 70B parameter model being served in bfloat16. (Assume the KV cache is so small as to be irrelevant.) What is the fewest number of TPU v4 chips we could serve on? 
+
+3. Imagine we we want to generate 100 tokens per second. How many chips do we need minimum?
+
+Answers below
+
+
+
+
+
+
+
+1 answer -- total flops = 2 * 70*10^9 * 10^6 = 1.4*10^17. With 10 seconds, we need 1.4*10^17 flops/10 seocnds = 1.4*10^16 flops per second. 1.4*10^16 FLOP/s / (275*10^12 FLOP/s/chip) = 50.9 chips, so we require at least 50.9 chips to be able to achieve this in theory.
+
+2 answer -- 70B params requires 140GB in bfloat16. 140GB / 32GB/chip ~= 4.4 chips so we need more than than number to fit the weights into HBM. (The computation will require more memory!)
+
+3 answer -- we need 140GB/iter * 100iter/s  = 14 TB/s of bandwidth. Each chip only has 1.23TB/s of bandwidth so we need 14TB/s / (1.23 TB/s/chip) ~= 11.4 chips to achieve this this in theory
