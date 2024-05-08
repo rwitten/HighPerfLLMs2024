@@ -140,10 +140,6 @@ class OurModel(nn.Module):
 
     return x @ embedding.T
 
-
-def numpy_to_string(numpy_arr):
-    return "".join([chr(item) for item in numpy_arr])
-
 def convert_to_ascii(string_array, max_length):
   result = np.zeros((len(string_array), max_length), dtype=np.uint8)
   for i, string in enumerate(string_array):
@@ -174,10 +170,6 @@ def calculate_num_params(pyt):
    sizes = jax.tree_util.tree_map(lambda x: x.size, pyt)
    return jax.tree_util.tree_reduce(lambda x, y: x+y, sizes)
 
-def visualize_input_to_output(input_string, output_string):
-    for i in range(30):
-        print(f"{i}: {input_string[:i]} -> `{output_string[i]}`")
-
 def main():
     ds = tfds.load('lm1b', split='train', shuffle_files=False)
     ds = ds.batch(BATCH_IN_SEQUENCES)
@@ -201,20 +193,37 @@ def main():
        tx = tx
     )
 
-    abstract_state = jax.tree_util.tree_map(ocp.utils.to_shape_dtype_struct, state)
-    checkpointer = ocp.StandardCheckpointer()
-    state = checkpointer.restore('/home/rwitten/class_checkpoints/checkpoint_0078000', args=ocp.args.StandardRestore(abstract_state))
+    iter = 0
+    static_step = jax.jit(step, static_argnums=1)
 
-    example = next(ds.as_numpy_iterator())
-    outputs = convert_to_ascii(example['text'], SEQUENCE_LENGTH)
-    inputs = output_to_input(outputs)
-    proposed_outputs = model.apply(state.params, inputs)
-    proposed_outputs_tokens = jnp.argmax(proposed_outputs, axis=2)
-    proposed_outputs_string = numpy_to_string(np.array(proposed_outputs_tokens[1]))
+    last_step_time = time.time()
+    stepnum = 0
 
-    input_string = example['text'][1]
-    visualize_input_to_output(input_string, proposed_outputs_string)
+    for example in ds:
+       outputs = convert_to_ascii(example['text'].numpy(), SEQUENCE_LENGTH)
+       inputs = output_to_input(outputs)
 
+       loss, state = static_step(state, model, inputs, outputs)
+
+       if stepnum % CHECKPOINT_PERIOD == 0:
+          checkpointer = ocp.StandardCheckpointer()
+          checkpointer.save(f'/home/rwitten/HighPerfLLMs2024/checkpoint_{stepnum:07}', state)
+          print(f"Saved checkpoint at {stepnum}")
+
+
+       stepnum += 1
+       
+       if stepnum % LOG_PERIOD == 0:
+          new_time = time.time()
+          time_elapsed_seconds = (new_time-last_step_time)
+          last_step_time = new_time
+          print(f"{stepnum} -> {loss=} {time_elapsed_seconds=}")
+          per_device_tflops_completed_in_interval = number_total_flops_per_device * LOG_PERIOD / 1e12
+
+          print(f"TFLOP/s/device {per_device_tflops_completed_in_interval / time_elapsed_seconds}")
+
+        
+       
 
 if __name__ == "__main__":
     main()
