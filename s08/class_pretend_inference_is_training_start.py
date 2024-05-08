@@ -19,7 +19,7 @@ import time
 import orbax.checkpoint as ocp
 
 
-BATCH_IN_SEQUENCES = 384
+BATCH_IN_SEQUENCES = 1
 SEQUENCE_LENGTH = 128
 
 VOCAB_DIM = 256
@@ -35,8 +35,8 @@ NUM_HEADS = 4
 
 LEARNING_RATE = 1e-6
 
-FSDP = 4
-TENSOR = 1
+FSDP = 1
+TENSOR = 4
 
 LOG_PERIOD = 10
 CHECKPOINT_PERIOD = 1000
@@ -150,7 +150,7 @@ def convert_to_ascii(string_array, max_length):
     for j, char in enumerate(string):
       if j >= SEQUENCE_LENGTH:
          break
-      result[i, j] = char
+      result[i, j] = ord(char)
   return result
 
 def output_to_input(np_array):
@@ -205,18 +205,8 @@ def main():
     checkpointer = ocp.StandardCheckpointer()
     state = checkpointer.restore('/home/rwitten/class_checkpoints/checkpoint_0078000', args=ocp.args.StandardRestore(abstract_state))
 
-    example = next(ds.as_numpy_iterator())
-    outputs = convert_to_ascii(example['text'], SEQUENCE_LENGTH)
-    inputs = output_to_input(outputs)
-    proposed_outputs = model.apply(state.params, inputs)
-    proposed_outputs_tokens = jnp.argmax(proposed_outputs, axis=2)
-    proposed_outputs_string = numpy_to_string(np.array(proposed_outputs_tokens[0]))
-
-    print(f"{proposed_outputs_string=}")
-
-    input_string = example['text'][0]
-    visualize_input_to_output(input_string, proposed_outputs_string)
-
+    text = np.zeros( (1, SEQUENCE_LENGTH), dtype = np.int32)
+    jax.numpy.argmax(model.apply(state.params, text), axis=2)
 
 if __name__ == "__main__":
     main()

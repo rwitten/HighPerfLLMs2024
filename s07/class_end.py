@@ -16,6 +16,8 @@ import optax
 
 import time
 
+import sys
+
 BATCH_IN_SEQUENCES = 384
 SEQUENCE_LENGTH = 128
 
@@ -33,8 +35,8 @@ NUM_HEADS = 4
 
 LEARNING_RATE = 1e-3
 
-FSDP = 1
-TENSOR = 4
+FSDP = 4
+TENSOR = 1
 
 LOG_PERIOD = 10
 
@@ -190,6 +192,8 @@ def main():
     last_step_time = time.time()
     stepnum = 0
 
+    jax.profiler.start_trace("gs://runner-maxtext-logs/rwitten-today-5")
+
     for example in ds:
        outputs = convert_to_ascii(example['text'].numpy(), SEQUENCE_LENGTH)
        inputs = input_to_output(outputs)
@@ -206,8 +210,13 @@ def main():
           last_step_time = new_time
           print(f"{iter} -> {loss} {time_elapsed_seconds}")
           per_device_tflops_completed_in_interval = number_total_flops_per_device * LOG_PERIOD / 1e12
-
           print(f"TFLOP/s/device {per_device_tflops_completed_in_interval / time_elapsed_seconds}")
+
+          if stepnum == LOG_PERIOD:
+             jax.profiler.stop_trace()
+          #sys.exit(0)
+
+          
        
 
        iter += 1
