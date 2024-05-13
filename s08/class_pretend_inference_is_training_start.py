@@ -206,7 +206,18 @@ def main():
     state = checkpointer.restore('/home/rwitten/class_checkpoints/checkpoint_0078000', args=ocp.args.StandardRestore(abstract_state))
 
     text = np.zeros( (1, SEQUENCE_LENGTH), dtype = np.int32)
-    jax.numpy.argmax(model.apply(state.params, text), axis=2)
+    NUM_TOKENS = 30
+    for i in range(NUM_TOKENS):
+        logits = model.apply(state.params, text) # here is my probability distribution! [BATCH, SEQUENCE, VOCAB]
+        new_tokens = jax.numpy.argmax(logits, axis=2)
+        text[0, i+1] = new_tokens[0, i]
+        breakpoint()
+
+    output_string = ""
+    for i in range(NUM_TOKENS):
+        output_string += chr(text[0,i])
+
+    print(output_string)
 
 if __name__ == "__main__":
     main()

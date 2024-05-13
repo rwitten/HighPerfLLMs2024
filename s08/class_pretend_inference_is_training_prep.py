@@ -205,16 +205,18 @@ def main():
     checkpointer = ocp.StandardCheckpointer()
     state = checkpointer.restore('/home/rwitten/class_checkpoints/checkpoint_0078000', args=ocp.args.StandardRestore(abstract_state))
 
+
     text = np.zeros( (1, SEQUENCE_LENGTH), dtype = np.int32)
     text[0,1] = ord('W')
     text[0,2] = ord('h')
     for i in range(2, 20):
-        new_text = jax.numpy.argmax(model.apply(state.params, text), axis=2)
-        text[0,i+1] = new_text[0,i]
+       new_text = jax.numpy.argmax(model.apply(state.params, text), axis=2)
+       text[0,i+1] = new_text[0,i]
+
 
     s = ""
     for i in range(20):
-        s = s + chr(text[0,i])
+       s = s + chr(text[0,i])
 
     print(s)
 

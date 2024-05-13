@@ -34,7 +34,9 @@ Link to the Discord: [https://discord.gg/2AWcVatVAw](https://discord.gg/2AWcVatV
 | postponed  | 3:30PM US Pacific, 4/17/2024     | postponed                                                       |                                  |                                          |
 | 7          | 3:30PM US Pacific, 4/24/2024     | [Youtube recording](https://youtu.be/enDiaGBWkV0)               | [slides](s07/Session7Slides.pdf) |  [link](s07/AfterSessionExercises.txt)   |  training e2e, inference analysis    |
 | postponed  | 3:30PM US Pacific, 5/01/2024     | postponed                                                       |                                  |                                          |
-| 8          | 3:30PM US Pacific, 5/08/2024     | [Google Meet link](https://meet.google.com/tdd-brrt-gtp)        |                                  |                                          |
+| 8          | 3:30PM US Pacific, 5/08/2024     | [Youtube recording](https://youtu.be/drb7kXQ0_js)               | [slides](s08/Session8Slides.pdf) |  [link](s08/AfterSessionExercises.txt)   |  training xprof, mfu, naive inference| 
+| 9          | 3:30PM US Pacific, 5/22/2024     | [Google Meet link](https://meet.google.com/tdd-brrt-gtp)        |                                  |                                          |
+| 10         | 3:30PM US Pacific, 5/29/2024     | [Google Meet link](https://meet.google.com/tdd-brrt-gtp)        |                                  |                                          |
 
 
 About me:

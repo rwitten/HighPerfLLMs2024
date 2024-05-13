@@ -1,0 +1,40 @@
+(Assume 275 TFLOP/s of peak floating point perf and 1.23 TB/s of peak memory bandwidth.)
+
+(1) Model Flop Utilization is just one notion of efficiency. Assume there is a matmul of two square matrices first of size 16384 and then 32768. 
+
+The 16384 sized matmul takes .036 seconds and the .284 seconds.
+
+What is their "model flop utilizations"? What is their "model bandwidth utilization"? Should we be worried that their memory bandwidth utilization is low?
+
+(Model Flop Utilization = Achieved TFLOP/s / Peak TFLOP and Model Bandwidth Utilization = Achieved Memory Bandwith / Peak Memory Bandwidth)
+
+
+(2) The workload in (1) is FLOP-bound so discussing Model-Flop-Utilization is better than Model-Bandwidth-Utilization would be better. What is a workload for which discussing Model-Bandwidth-Utilization would be better?
+
+
+
+
+
+(1 -- solution)
+
+The FLOP/s for the 16384 matmul is 2 * 16384^3 / .036 = 2.44 * 10^14 FLOP/s/ = 244 TFLOP/s
+The FLOP/s for the 32768 matmul is 2 * 32768^3 / .284  = 2.47 * 10^14 FLOP/s/ = 247 TFLOP/s
+
+So they achieve 244/275 = 88.7% and 247/275 = 89.8% Model Flop Utilization.
+
+The bandwidth for the 16384 matmul is 3 * 2*16384*16384 / .036 = 44.7 GB/s
+The bandwidth for the 32768 matmul is 3 * 2*32768*32768 / .284 = 22.7 GB/s
+
+The memory bandwidth utilization is 44.7/1230 = 3.6% and 22.7/1230 = 1.8% respectively.
+
+
+(2 -- solution)
+
+Many cases! But doing many small matmuls, a unary op such as A+1 or a binary op such as A+B would all be memory bandwidth bound. Additionally, we have seen LLM generation is bandwidth bound! (I think the only workload we've seen that is flop-bound is convolution.)
+
+
+
+
+
+
+

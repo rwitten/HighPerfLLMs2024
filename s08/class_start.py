@@ -212,6 +212,7 @@ def main():
     proposed_outputs_tokens = jnp.argmax(proposed_outputs, axis=2)
     proposed_outputs_string = numpy_to_string(np.array(proposed_outputs_tokens[0]))
 
+    print(example['text'][0])
     print(f"{proposed_outputs_string=}")
 
     input_string = example['text'][0]
