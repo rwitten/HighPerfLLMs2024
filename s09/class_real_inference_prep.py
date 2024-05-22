@@ -17,26 +17,21 @@ import optax
 import time
 
 import orbax.checkpoint as ocp
-
-from jax.experimental.pallas.ops.tpu import flash_attention as pallas_attention
-
 import timing_util
-
-
 
 BATCH_IN_SEQUENCES = 1
 SEQUENCE_LENGTH = 128
 
 VOCAB_DIM = 256
-EMBED_DIM = 1024
-FF_DIM = 4096
+EMBED_DIM = 2048
+FF_DIM = 8192
 
 HEAD_DIM = 128
 
-LAYERS = 8
+LAYERS = 8 ### go to 1 sometimes?
 
 HEAD_DEPTH = 128
-NUM_HEADS = 4
+NUM_HEADS = 8
 
 LEARNING_RATE = 1e-6
 
@@ -50,24 +45,19 @@ mesh = jax.sharding.Mesh(np.reshape(  jax.devices()[0], (FSDP,TENSOR)), ["fsdp",
 desired_embedding_sharding = jax.sharding.NamedSharding(mesh, jax.sharding.PartitionSpec("fsdp", None, "tp"))  # apply this to things that are BATCH, SEQUENCE, EMBED
 
 
-def attention_ourselves(_Q, _K, _V):
-    _weights_unnormalized = jax.numpy.einsum("BSHD,BTHD->BHST", _Q, _K)
-    _weights_unnormalized_to_zero_out = jax.numpy.triu( jax.numpy.ones((_K.shape[1],_K.shape[1]), jax.numpy.bfloat16), 1)
-    _weights = jax.nn.softmax(_weights_unnormalized - 1e6 * _weights_unnormalized_to_zero_out)  ### Creating something of size (B,HEADS, SEQUENCE, SEQUENCE)
-    output = jax.numpy.einsum("BHST,BTHD->BSHD", _weights, _V)
+from jax.experimental.pallas.ops.tpu import flash_attention as pallas_attention
 
-    return output
 
-# def attention_with_masking(_Q, _K, _V, seq_pos=SEQUENCE_LENGTH):
-#     query_segment_id = jnp.ones( (1,_Q.shape[1]), dtype=jnp.int32)
-#     kv_segment_id = jnp.ones( (1, SEQUENCE_LENGTH), jnp.int32) * jnp.expand_dims(jnp.arange(SEQUENCE_LENGTH) <= seq_pos, axis = 0)
+def attention_ourselves(_Q, _K, _V, seq_pos):
+    query_segment_id = jnp.ones( (1,1), dtype=jnp.int32)
+    kv_segment_id = jnp.ones( (1, SEQUENCE_LENGTH), jnp.int32) * jnp.expand_dims(jnp.arange(SEQUENCE_LENGTH) <= seq_pos, axis = 0)
 
-#     segment_ids = pallas_attention.SegmentIds( q = query_segment_id, kv = kv_segment_id)
-#     return jax.numpy.swapaxes(pallas_attention.mha_reference(jax.numpy.swapaxes(_Q,1,2), jax.numpy.swapaxes(_K,1,2), jax.numpy.swapaxes(_V,1,2), None, segment_ids = segment_ids),1,2)
+    segment_ids = pallas_attention.SegmentIds( q = query_segment_id, kv = kv_segment_id)
+    return jax.numpy.swapaxes(pallas_attention.mha_reference(jax.numpy.swapaxes(_Q,1,2), jax.numpy.swapaxes(_K,1,2), jax.numpy.swapaxes(_V,1,2), None, segment_ids = segment_ids),1,2)
 
 class OurModel(nn.Module):
   @nn.compact
-  def __call__(self, x):
+  def __call__(self, x, cache, seq_pos):
     '''
         x is [BATCH, SEQUENCE]
     '''
@@ -93,7 +83,8 @@ class OurModel(nn.Module):
         jnp.float32,
       )
 
-      x += positional_embedding
+      x += jax.lax.dynamic_slice_in_dim(positional_embedding, seq_pos, 1, axis=1)
+
 
       x = jax.lax.with_sharding_constraint(x, desired_embedding_sharding)
       feedforward = self.param(
@@ -120,7 +111,7 @@ class OurModel(nn.Module):
           (EMBED_DIM, NUM_HEADS, HEAD_DIM),
           jnp.float32,
       )
-      q = jnp.einsum("BSE,EHD->BSHD",x, q_proj )
+      q = jnp.einsum("BSE,EHD->BSHD",x, q_proj, preferred_element_type = jnp.float32)
 
       k_proj = self.param(
           'kproj_' + str(i),
@@ -128,7 +119,10 @@ class OurModel(nn.Module):
           (EMBED_DIM, NUM_HEADS, HEAD_DIM),
           jnp.float32,
       )
-      k = jnp.einsum("BSE,EHD->BSHD",x, k_proj )
+      k = jnp.einsum("BSE,EHD->BSHD",x, k_proj, preferred_element_type = jnp.float32 )
+
+      cache[f"key_{i}"] = jax.lax.dynamic_update_index_in_dim(cache[f"key_{i}"], k, seq_pos, 1)
+      k = cache[f"key_{i}"]
 
       v_proj = self.param(
           'vproj_' + str(i),
@@ -136,9 +130,13 @@ class OurModel(nn.Module):
           (EMBED_DIM, NUM_HEADS, HEAD_DIM),
           jnp.float32,
       )
-      v = jnp.einsum("BSE,EHD->BSHD",x, v_proj )
+      v = jnp.einsum("BSE,EHD->BSHD",x, v_proj, preferred_element_type = jnp.float32  )
+      cache[f"value_{i}"] = jax.lax.dynamic_update_index_in_dim(cache[f"value_{i}"], v, seq_pos, 1)
+      v = cache[f"value_{i}"]
 
-      o = attention_ourselves(q,k,v)
+      o = attention_ourselves(q,k,v,seq_pos)
+      #print(q.shape, k.shape, v.shape, o.shape)
+
 
       o_proj = self.param(
           'oproj_' + str(i),
@@ -149,7 +147,7 @@ class OurModel(nn.Module):
       x = jnp.einsum("BSHD,HDE->BSE",o, o_proj )
       x = jax.lax.with_sharding_constraint(x, desired_embedding_sharding)
 
-    return x @ embedding.T
+    return x @ embedding.T, cache
 
 
 def numpy_to_string(numpy_arr):
@@ -189,16 +187,28 @@ def visualize_input_to_output(input_string, output_string):
     for i in range(30):
         print(f"{i}: {input_string[:i]} -> `{output_string[i]}`")
 
+
+def init_kv_cache():
+    cache = {}
+    for i in range(LAYERS):
+        cache[f"key_{i}"] = jnp.zeros( (1,SEQUENCE_LENGTH,NUM_HEADS,HEAD_DEPTH), dtype=jnp.float32)
+        cache[f"value_{i}"] = jnp.zeros( (1,SEQUENCE_LENGTH,NUM_HEADS,HEAD_DEPTH), dtype=jnp.float32)
+    return cache
+
 def main():
+    kv_cache = init_kv_cache()
+
     rngkey = jax.random.key(0)
     model = OurModel()
 
-    shaped_init = jax.eval_shape( functools.partial(model.init, rngkey), jax.ShapeDtypeStruct((BATCH_IN_SEQUENCES, SEQUENCE_LENGTH), dtype = jnp.uint8))
+    shaped_init = jax.eval_shape( functools.partial(model.init, rngkey), jax.ShapeDtypeStruct((BATCH_IN_SEQUENCES, 1), dtype = jnp.uint8), kv_cache, 0)
     state_sharding = nn.get_sharding(shaped_init, mesh)
-    _params = jax.jit(model.init, out_shardings = state_sharding)(rngkey, jax.ShapeDtypeStruct((BATCH_IN_SEQUENCES, SEQUENCE_LENGTH), dtype = jnp.uint8))
+    _params = jax.jit(model.init, out_shardings = state_sharding)(rngkey, jax.ShapeDtypeStruct((BATCH_IN_SEQUENCES, 1), dtype = jnp.uint8), kv_cache, 0)
     
-    number_total_params = calculate_num_params(_params)
-    print(f"Number total params {number_total_params/1e6} million")
+    number_total_vars = calculate_num_params(_params) + calculate_num_params(kv_cache)
+    bytes_total_vars = 4 * number_total_vars
+    print(f"Number total params {number_total_vars/1e6} million, {bytes_total_vars/1e9} GB")
+
 
     tx = optax.adam(learning_rate = LEARNING_RATE)
     state = train_state.TrainState.create(
@@ -209,20 +219,27 @@ def main():
 
     abstract_state = jax.tree_util.tree_map(ocp.utils.to_shape_dtype_struct, state)
     checkpointer = ocp.StandardCheckpointer()
-    state = checkpointer.restore('/home/rwitten/class_checkpoints/checkpoint_0078000', args=ocp.args.StandardRestore(abstract_state))
+    #state = checkpointer.restore('/home/rwitten/class_checkpoints/checkpoint_0078000', args=ocp.args.StandardRestore(abstract_state))
 
-    text = np.zeros( (1, SEQUENCE_LENGTH), dtype = np.int32)
+
+
+    text = np.zeros( (1, 1), dtype = np.int32)
+    time_ms = timing_util.simple_timeit( jax.jit(model.apply), state.params, text, kv_cache, 0, task="blah")
+    print(f"achieved bandwidth {bytes_total_vars/1e9/(time_ms/1000)} GB/s")
+
+
+    output_tokens = []
     NUM_TOKENS = 30
     for i in range(NUM_TOKENS):
-        logits = model.apply(state.params, text) # here is my probability distribution! [BATCH, SEQUENCE, VOCAB]
-        new_tokens = jax.numpy.argmax(logits, axis=2)
-        text[0, i+1] = new_tokens[0, i]
+        logits, kv_cache = model.apply(state.params, text, kv_cache, i) # here is my probability distribution! [BATCH, SEQUENCE, VOCAB]
+        text = jax.numpy.argmax(logits, axis=2)
+        output_tokens.append(text)
 
     output_string = ""
     for i in range(NUM_TOKENS):
-        output_string += chr(text[0,i])
+        output_string += chr(output_tokens[i].item())
 
-    print(f"Output: `{output_string}`")
+    print(f"output string {output_string}")
 
 if __name__ == "__main__":
     main()
