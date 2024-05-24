@@ -1,0 +1,9 @@
+(1) Extend efficient inference to handle a batch of greater than 1! How does changing from batch=1 to batch=2 effect how long a generate takes? (Shouldn't too much!)
+
+(2) The recipe that is standard for 8-bit training is "absmax" scaling. Here is the algorithm (for int8). Let's see how well the algorithm works when summing a vector, like we did in class.
+(a) compute the absmax -- max(abs(input_vector)). Output this in float32.
+(b) Now scale to int8, multiplying (127 * input_vector/absmax)
+(c) Now sum -- outputting into int32.
+(d) Now multiply by absmax/127, outputing into float32!
+
+This algorithm should do a fairly good job of recovering the rolling sum! (This is implemented in s09/determinism_prep.py in int8_sum if you want to see!)

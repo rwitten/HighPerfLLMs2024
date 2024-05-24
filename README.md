@@ -3,20 +3,15 @@ Build a full scale, high-performance LLM from scratch in Jax! We’ll cover trai
 
 Link to the Discord: [https://discord.gg/2AWcVatVAw](https://discord.gg/2AWcVatVAw)
 
-# Syllabus. We will:
-* Build a Jax LLM Implementation From Scratch
+# Topics Covered
+* Build a high performance Jax LLM Implementation for training
+* Build a high performance Jax LLM Implementation for serving
 * Analyze Single Chip Rooflines And Compilation
 * Analyze Distributed Computing via Sharding
 * Optimize LLM Training – what happens under the hood, rooflines, sharding
 * Optimize LLM Inference – what happens under the hood, rooflines, sharding
-* Deep Dive into flash, vLLM, continuous batching, etc.
-* Some deep dives along the way:
-  - Attention, Flash Attention, vLLM, continuous batching
-  - ML: Quantization, Checkpointing, Data Loading, Numerics
-  - Practical Tips: Debugging, Overlapping Jax Kernels
-  - Larger scale: Goodput
-  - Fancy stuff: Ahead of Time Compilation
-  - Going deeper: shard map, pallas.
+* Deep Dive into attention especialy fused attention schedules, running softmax and flash attention
+* Pallas (optimize one lever deeper!)
 
 # Approximate Timing
 3:30PM Pacific on Wednesdays, starting 2/21/2024. See below for links
@@ -31,11 +26,9 @@ Link to the Discord: [https://discord.gg/2AWcVatVAw](https://discord.gg/2AWcVatV
 | 4          | 3:30PM US Pacific, 3/20/2024     | [Youtube recording](https://youtu.be/V5SPOR4Wilk)               | [slides](s04/Session4Slides.pdf) |  [link](s04/AfterSessionExercises.txt)   |  multi chip perf and rooflines, 1    |
 | 5          | 3:30PM US Pacific, 3/27/2024     | [Youtube recording](https://youtu.be/h2khnnFqJMA)               | [slides](s05/Session5Slides.pdf) |  [link](s05/AfterSessionExercises.txt)   |  attention                           |
 | 6          | 3:30PM US Pacific, 4/10/2024     | [Youtube recording](https://youtu.be/3dQBwysPgTk)               | [slides](s06/Session6Slides.pdf) |  [link](s06/AfterSessionExercises.txt)   |  optimized training                  |
-| postponed  | 3:30PM US Pacific, 4/17/2024     | postponed                                                       |                                  |                                          |
 | 7          | 3:30PM US Pacific, 4/24/2024     | [Youtube recording](https://youtu.be/enDiaGBWkV0)               | [slides](s07/Session7Slides.pdf) |  [link](s07/AfterSessionExercises.txt)   |  training e2e, inference analysis    |
-| postponed  | 3:30PM US Pacific, 5/01/2024     | postponed                                                       |                                  |                                          |
-| 8          | 3:30PM US Pacific, 5/08/2024     | [Youtube recording](https://youtu.be/drb7kXQ0_js)               | [slides](s08/Session8Slides.pdf) |  [link](s08/AfterSessionExercises.txt)   |  training xprof, mfu, naive inference| 
-| 9          | 3:30PM US Pacific, 5/22/2024     | [Google Meet link](https://meet.google.com/tdd-brrt-gtp)        |                                  |                                          |
+| 8          | 3:30PM US Pacific, 5/08/2024     | [Youtube recording](https://youtu.be/drb7kXQ0_js)               | [slides](s08/Session8Slides.pdf) |  [link](s08/AfterSessionExercises.txt)   |  training xprof, mfu, naive inference|
+| 9          | 3:30PM US Pacific, 5/22/2024     | [Youtube recording](https://youtu.be/UgceEI35YKg)               | [slides](s09/Session9Slides.pdf) |  [link](s09/AfterSessionExercises.txt)   |  efficient inference, numerics       |
 | 10         | 3:30PM US Pacific, 5/29/2024     | [Google Meet link](https://meet.google.com/tdd-brrt-gtp)        |                                  |                                          |
 
 

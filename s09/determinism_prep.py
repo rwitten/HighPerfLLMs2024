@@ -2,9 +2,9 @@ import math
 import random
 import jax
 
-A1 = [math.sin(x) for x in list(range(10000))]
+A1 = [math.sin(x) for x in list(range(100000))]
 
-A2 = [math.sin(x) for x in list(range(10000))]
+A2 = [math.sin(x) for x in list(range(100000))]
 random.shuffle(A2)
 
 def jax_sum(input_arr):
@@ -25,8 +25,20 @@ def jax_bad_sum(input_arr):
 
     return accum
 
+
+
+def int8_sum(input_arr):
+    input_arr_jax = jax.numpy.asarray(input_arr, dtype=jax.numpy.float32)
+    absmax = jax.numpy.max(jax.numpy.abs(input_arr_jax))
+    scaled = jax.numpy.asarray(input_arr_jax / absmax * 127, dtype = jax.numpy.int8)
+    output_sum = jax.numpy.sum(scaled)
+    return output_sum * absmax / 127
+
 print(f"{sum(A1)=}")
 print(f"{sum(A2)=}")
+
+print(f"{int8_sum(A1)=}")
+print(f"{int8_sum(A2)=}")
 
 print(f"{jax_sum(A1)=}")
 print(f"{jax_sum(A2)=}")
