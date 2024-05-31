@@ -29,7 +29,9 @@ Link to the Discord: [https://discord.gg/2AWcVatVAw](https://discord.gg/2AWcVatV
 | 7          | 3:30PM US Pacific, 4/24/2024     | [Youtube recording](https://youtu.be/enDiaGBWkV0)               | [slides](s07/Session7Slides.pdf) |  [link](s07/AfterSessionExercises.txt)   |  training e2e, inference analysis    |
 | 8          | 3:30PM US Pacific, 5/08/2024     | [Youtube recording](https://youtu.be/drb7kXQ0_js)               | [slides](s08/Session8Slides.pdf) |  [link](s08/AfterSessionExercises.txt)   |  training xprof, mfu, naive inference|
 | 9          | 3:30PM US Pacific, 5/22/2024     | [Youtube recording](https://youtu.be/UgceEI35YKg)               | [slides](s09/Session9Slides.pdf) |  [link](s09/AfterSessionExercises.txt)   |  efficient inference, numerics       |
-| 10         | 3:30PM US Pacific, 5/29/2024     | [Google Meet link](https://meet.google.com/tdd-brrt-gtp)        |                                  |                                          |
+| 10         | 3:30PM US Pacific, 5/29/2024     | [Youtube recording](https://www.youtube.com/watch?v=liKrhX2gm44)| [slides](s10/Session10Slides.pdf)|  [link](s10/AfterSessionExercises.txt)   |  Pallas with Sharad Vikram!          |
+
+(Session 10 was the last session! Thank you to everyone who joined us!)
 
 
 About me:

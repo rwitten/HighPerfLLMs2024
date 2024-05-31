@@ -1,0 +1,5 @@
+(1) In the slides, Sharad shows a simple matmul kernel.
+
+(a) Time it! Do you get the perf you expect? (You certainly should on a v4 chip!)
+(b) Normally we want to fuse in activation. Instead of A@B we could compute activation(A@B) where commonly activation is relu. Can you do this? How does it impact perf? How does it compare to jit(relu(A@B))?
+(c) Can you make the kernel take arbitrary activations (without paying a perf penalty)?
