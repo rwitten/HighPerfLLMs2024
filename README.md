@@ -1,29 +1,26 @@
 # High Performance LLMs 2024
-Build a full scale, high-performance LLM from scratch in Jax! We’ll cover training and inference, roofline analysis, compilation, sharding, profiling and more. You’ll leave the class comfortable in Jax and confident in your ability to design high-performance computing systems that reach near their physical limit.
+Build a full scale, high-performance LLM from scratch in Jax! We cover training and inference, roofline analysis, compilation, sharding, profiling and more. You’ll leave the class comfortable in Jax and confident in your ability to design high-performance computing systems that reach near the physical limit.
 
 Link to the Discord: [https://discord.gg/2AWcVatVAw](https://discord.gg/2AWcVatVAw)
 
 # Topics Covered
 * Build a high performance Jax LLM Implementation for training
-* Build a high performance Jax LLM Implementation for serving
+* Build a high performance Jax LLM Implementation for inference
 * Analyze Single Chip Rooflines And Compilation
 * Analyze Distributed Computing via Sharding
 * Optimize LLM Training – what happens under the hood, rooflines, sharding
 * Optimize LLM Inference – what happens under the hood, rooflines, sharding
 * Deep Dive into attention especialy fused attention schedules, running softmax and flash attention
-* Pallas (optimize one lever deeper!)
+* Pallas - learn to optimize one lever deeper
 
-# Approximate Timing
-3:30PM Pacific on Wednesdays, starting 2/21/2024. See below for links
-
-# Session Timing, Slides, Videos and Take-Home Exercises
+# Sessions, Slides, Videos and Take-Home Exercises
 
 | Session    |              Time                | Link to join (or recording)                                     | Slides                           | Take-Home Exercises                      |  Summary                             |
 | --------   | -------                          |  ----                                                           |         -----                    |        -----                             |  -----                               |
 | 1          | 3:30PM US Pacific, 2/21/2024     | [Youtube recording](https://www.youtube.com/watch?v=W0Cix2KNyXc)| [slides](s01/Session1Slides.pdf) |  [link](s01/AfterSessionExercises.txt)   |  end-to-end Jax LLM                  |
 | 2          | 3:30PM US Pacific, 2/28/2024     | [Youtube recording](https://www.youtube.com/watch?v=RciT5fcuN1E)| [slides](s02/Session2Slides.pdf) |  [link](s02/AfterSessionExercises.txt)   |  single chip perf and rooflines      |
 | 3          | 3:30PM US Pacific, 3/13/2024     | [Youtube recording](https://www.youtube.com/watch?v=9jC-YiZ2fkA)| [slides](s03/Session3Slides.pdf) |  [link](s03/AfterSessionExercises.txt)   |  multi chip perf and rooflines, 1    |
-| 4          | 3:30PM US Pacific, 3/20/2024     | [Youtube recording](https://youtu.be/V5SPOR4Wilk)               | [slides](s04/Session4Slides.pdf) |  [link](s04/AfterSessionExercises.txt)   |  multi chip perf and rooflines, 1    |
+| 4          | 3:30PM US Pacific, 3/20/2024     | [Youtube recording](https://youtu.be/V5SPOR4Wilk)               | [slides](s04/Session4Slides.pdf) |  [link](s04/AfterSessionExercises.txt)   |  multi chip perf and rooflines, 2    |
 | 5          | 3:30PM US Pacific, 3/27/2024     | [Youtube recording](https://youtu.be/h2khnnFqJMA)               | [slides](s05/Session5Slides.pdf) |  [link](s05/AfterSessionExercises.txt)   |  attention                           |
 | 6          | 3:30PM US Pacific, 4/10/2024     | [Youtube recording](https://youtu.be/3dQBwysPgTk)               | [slides](s06/Session6Slides.pdf) |  [link](s06/AfterSessionExercises.txt)   |  optimized training                  |
 | 7          | 3:30PM US Pacific, 4/24/2024     | [Youtube recording](https://youtu.be/enDiaGBWkV0)               | [slides](s07/Session7Slides.pdf) |  [link](s07/AfterSessionExercises.txt)   |  training e2e, inference analysis    |
